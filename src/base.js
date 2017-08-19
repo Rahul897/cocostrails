@@ -1,0 +1,150 @@
+var baseLayer = cc.Layer.extend({
+    ctor:function () {
+        //////////////////////////////
+        // 1. super init first
+        this._super();
+
+        cc.log("Sample Startup")
+
+        this.createTestMenu();
+
+        var winsize = cc.winSize;
+        return true;
+    },
+
+    createTestMenu:function() {
+        var self = this;
+        var size = cc.winSize;
+
+        var coinsLabel = cc.Label.createWithSystemFont("Hello Js", "Arial", 32);
+        coinsLabel.setPosition(size.width/2, 80);
+        self.addChild(coinsLabel);
+        self.coinsLabel = coinsLabel;
+
+        cc.MenuItemFont.setFontName('arial');
+        cc.MenuItemFont.setFontSize(32);
+
+
+        self.kHomeBanner = "home";
+        self.kGameOverAd = "gameover";
+        self.kRewardedAd = "rewarded";
+        self.totalAmount = 0;
+        printf = console.log
+
+        var menu = new cc.Menu(
+            // banner
+            new cc.MenuItemFont("load banner", function () {
+                sdkbox.PluginAdMob.cache(self.kHomeBanner);
+            }, this),
+            new cc.MenuItemFont("show banner", function () {
+                sdkbox.PluginAdMob.show(self.kHomeBanner);
+            }, this),
+            new cc.MenuItemFont("hide banner", function () {
+                sdkbox.PluginAdMob.hide(self.kHomeBanner);
+            }, this),
+            new cc.MenuItemFont("is banner available", function () {
+                var yes = sdkbox.PluginAdMob.isAvailable(self.kHomeBanner);
+                self.showText("is {0} is available {1}".format(self.kHomeBanner, yes));
+            }, this),
+
+            // interstitial
+            new cc.MenuItemFont("load interstitial", function () {
+                sdkbox.PluginAdMob.cache(self.kGameOverAd);
+            }, this),
+            new cc.MenuItemFont("show interstitial", function () {
+                sdkbox.PluginAdMob.show(self.kGameOverAd);
+            }, this),
+            new cc.MenuItemFont("is interstitial available", function () {
+                var yes = sdkbox.PluginAdMob.isAvailable(self.kGameOverAd);
+                self.showText("is {0} is available {1}".format(self.kGameOverAd, yes));
+            }, this),
+
+            // rewarded video
+            new cc.MenuItemFont("load rewarded video", function () {
+                sdkbox.PluginAdMob.cache(self.kRewardedAd);
+            }, this),
+            new cc.MenuItemFont("show rewarded video", function () {
+                sdkbox.PluginAdMob.show(self.kRewardedAd);
+            }, this),
+            new cc.MenuItemFont("play", function () {
+              cc.director.runScene(new playScene());
+            }),
+
+            // gc test
+            new cc.MenuItemFont("====gc===", function() {
+               cc.log("======gc start=====");
+               __jsc__.garbageCollect();
+               cc.log("======gc end=====");
+               })
+            );
+        menu.setPosition(size.width/2, size.height/2);
+        menu.alignItemsVerticallyWithPadding(20);
+        self.addChild(menu);
+
+        var initSDK = function() {
+            if ("undefined" == typeof(sdkbox)) {
+                console.log("sdkbox is not exist")
+                return
+            }
+
+            if ("undefined" != typeof(sdkbox.PluginAdMob)) {
+                var plugin = sdkbox.PluginAdMob
+                plugin.setListener({
+                    adViewDidReceiveAd: function(name) {
+                        self.showText('adViewDidReceiveAd name='+name);
+                        if (name == self.kHomeBanner) {
+                            plugin.show(name);
+                        }
+                    },
+                    adViewDidFailToReceiveAdWithError: function(name, msg) {
+                        self.showText('adViewDidFailToReceiveAdWithError name='+name+' msg='+msg);
+                    },
+                    adViewWillPresentScreen: function(name) {
+                        self.showText('adViewWillPresentScreen name='+name);
+                    },
+                    adViewDidDismissScreen: function(name) {
+                        self.showText('adViewDidDismissScreen name='+name);
+                        plugin.cache(name);
+                    },
+                    adViewWillDismissScreen: function(name) {
+                        self.showText('adViewWillDismissScreen='+name);
+                    },
+                    adViewWillLeaveApplication: function(name) {
+                        self.showText('adViewWillLeaveApplication='+name);
+                    },
+                    reward: function(name, currency, amount) {
+                        self.totalAmount = self.totalAmount + amount;
+                        self.showText('reward='+name+' '+currency+' '+amount);
+                        self.showText('totalAmount='+self.totalAmount);
+                    }
+                });
+                plugin.init();
+
+                // just for test
+                if ("undefined" != typeof(plugin.deviceid) && plugin.deviceid.length > 0) {
+                    console.log(">>>>{0}".format(plugin.deviceid));
+                    plugin.setTestDevices(plugin.deviceid);
+                }
+
+            } else {
+                printf("no plugin init")
+            }
+        }
+
+        initSDK();
+
+        var showText = function(msg) {
+            printf(msg);
+            self.coinsLabel.setString(msg);
+        }
+        self.showText = showText;
+    }
+});
+
+var baseScene = cc.Scene.extend({
+    onEnter:function () {
+        this._super();
+        var layer = new baseLayer();
+        this.addChild(layer);
+    }
+});

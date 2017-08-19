@@ -1,0 +1,88 @@
+{
+    "android": {
+        "Share": {
+            "platforms": {
+                "Native": {}
+            }
+        },
+        "AdMob": {
+            "test": false,
+            "ads": {
+                "gameover": {
+                    "type": "interstitial",
+                    "id": "ca-app-pub-1329374026572143/1092476511"
+                },
+                "home": {
+                    "width": 300,
+                    "type": "banner",
+                    "id": "ca-app-pub-1329374026572143/2685130917",
+                    "alignment": "bottom",
+                    "height": 50
+                },
+                "next_level": {
+                    "type": "interstitial",
+                    "id": "ca-app-pub-1329374026572143/4564434111"
+                },
+                "top_banner": {
+                    "type": "banner",
+                    "id": "ca-app-pub-1329374026572143/3087700911",
+                    "alignment": "top"
+                },
+                "rewarded": {
+                    "type": "rewarded_video",
+                    "id": "ca-app-pub-1329374026572143/8251968111"
+                }
+            }
+        },
+        "Facebook": {
+            "debug": false
+        }
+    },
+    "ios": {
+        "Share": {
+            "platforms": {
+                "SMS": {},
+                "Twitter": {
+                    "params": {
+                        "secret": "haVcKarM96Sr4390XLQoHjyRUSyuHdkMX6letcc38h8TOWyiR9",
+                        "key": "BUJTV6NEM7BAhhm82B12VbKGy"
+                    }
+                },
+                "Facebook": {},
+                "Mail": {}
+            }
+        },
+        "AdMob": {
+            "test": false,
+            "ads": {
+                "gameover": {
+                    "type": "interstitial",
+                    "id": "ca-app-pub-1329374026572143/4185543717"
+                },
+                "home": {
+                    "width": 300,
+                    "type": "banner",
+                    "id": "ca-app-pub-1329374026572143/3847466511",
+                    "alignment": "bottom",
+                    "height": 50
+                },
+                "next_level": {
+                    "type": "interstitial",
+                    "id": "ca-app-pub-1329374026572143/9390403312"
+                },
+                "top_banner": {
+                    "type": "banner",
+                    "id": "ca-app-pub-1329374026572143/6690628914",
+                    "alignment": "top"
+                },
+                "rewarded": {
+                    "type": "rewarded_video",
+                    "id": "ca-app-pub-1329374026572143/7991602916"
+                }
+            }
+        },
+        "Facebook": {
+            "debug": true
+        }
+    }
+}
